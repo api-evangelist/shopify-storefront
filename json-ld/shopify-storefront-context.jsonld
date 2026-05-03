@@ -1,0 +1,62 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "shopify": "https://shopify.dev/docs/api/storefront/latest/objects/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Product": "schema:Product",
+    "id": "@id",
+    "title": "schema:name",
+    "description": "schema:description",
+    "descriptionHtml": "schema:description",
+    "handle": "schema:identifier",
+    "vendor": "schema:brand",
+    "productType": "schema:category",
+    "tags": "schema:keywords",
+    "availableForSale": "schema:availability",
+    "publishedAt": {
+      "@id": "schema:datePublished",
+      "@type": "xsd:dateTime"
+    },
+    "priceRange": "schema:offers",
+    "variants": "schema:hasVariant",
+    "images": "schema:image",
+    "featuredImage": "schema:image",
+
+    "ProductVariant": "schema:ProductModel",
+    "sku": "schema:sku",
+    "price": "schema:price",
+    "compareAtPrice": "schema:originalPrice",
+    "weight": "schema:weight",
+    "selectedOptions": "schema:additionalProperty",
+
+    "Collection": "schema:CollectionPage",
+    "products": "schema:hasPart",
+
+    "Cart": "schema:Order",
+    "checkoutUrl": "schema:url",
+    "totalQuantity": "schema:orderQuantity",
+    "cost": "schema:priceSpecification",
+    "lines": "schema:orderedItem",
+    "discountCodes": "schema:discount",
+
+    "Customer": "schema:Person",
+    "email": "schema:email",
+    "firstName": "schema:givenName",
+    "lastName": "schema:familyName",
+    "phone": "schema:telephone",
+    "acceptsMarketing": "schema:hasOfferCatalog",
+    "addresses": "schema:address",
+
+    "MoneyV2": "schema:MonetaryAmount",
+    "amount": "schema:value",
+    "currencyCode": "schema:currency",
+
+    "Image": "schema:ImageObject",
+    "url": "schema:url",
+    "altText": "schema:alternateName",
+    "width": "schema:width",
+    "height": "schema:height"
+  }
+}

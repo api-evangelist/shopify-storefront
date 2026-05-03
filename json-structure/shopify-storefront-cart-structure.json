@@ -1,0 +1,68 @@
+{
+  "title": "Shopify Storefront Cart Structure",
+  "description": "Hierarchical structure of the Shopify Storefront API Cart object",
+  "resource": "Cart",
+  "graphqlType": "Cart",
+  "mutation": "cartCreate",
+  "structure": {
+    "id": { "type": "string", "description": "Cart GID (gid://shopify/Cart/{token})" },
+    "checkoutUrl": { "type": "uri", "description": "URL to Shopify-hosted checkout" },
+    "totalQuantity": { "type": "integer", "description": "Total item count across all lines" },
+    "createdAt": { "type": "datetime", "description": "Cart creation timestamp" },
+    "updatedAt": { "type": "datetime", "description": "Last modification timestamp" },
+    "note": { "type": "string", "nullable": true, "description": "Buyer note for the order" },
+    "cost": {
+      "type": "object",
+      "description": "Pricing summary for the cart",
+      "properties": {
+        "totalAmount": { "type": "MoneyV2", "description": "Grand total including taxes" },
+        "subtotalAmount": { "type": "MoneyV2", "description": "Total before taxes and shipping" },
+        "totalTaxAmount": { "type": "MoneyV2", "nullable": true, "description": "Total tax" },
+        "totalDutyAmount": { "type": "MoneyV2", "nullable": true, "description": "Total duty/import fees" }
+      }
+    },
+    "lines": {
+      "type": "Connection<CartLine>",
+      "description": "Paginated list of cart line items",
+      "items": {
+        "id": { "type": "string", "description": "Cart line GID" },
+        "quantity": { "type": "integer", "description": "Quantity of the variant" },
+        "merchandise": {
+          "type": "ProductVariant",
+          "description": "The product variant being purchased"
+        },
+        "cost": {
+          "type": "object",
+          "properties": {
+            "totalAmount": { "type": "MoneyV2" },
+            "amountPerQuantity": { "type": "MoneyV2" }
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Custom attributes for the line item",
+          "items": {
+            "key": { "type": "string" },
+            "value": { "type": "string" }
+          }
+        }
+      }
+    },
+    "discountCodes": {
+      "type": "array",
+      "description": "Applied discount codes",
+      "items": {
+        "code": { "type": "string" },
+        "applicable": { "type": "boolean" }
+      }
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Custom cart attributes",
+      "items": {
+        "key": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    }
+  }
+}

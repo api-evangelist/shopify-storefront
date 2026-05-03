@@ -1,0 +1,70 @@
+extends: spectral:oas
+rules:
+  shopify-storefront-graphql-endpoint:
+    description: Shopify Storefront API uses a single GraphQL endpoint
+    severity: info
+    given: "$.paths"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          maxProperties: 2
+
+  shopify-storefront-access-token:
+    description: Storefront API requires X-Shopify-Storefront-Access-Token authentication
+    severity: error
+    given: "$.components.securitySchemes"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - StorefrontAccessToken
+
+  shopify-storefront-operation-id:
+    description: All Storefront API operations must have operationIds
+    severity: error
+    given: "$.paths[*][get,post,put,delete,patch]"
+    then:
+      field: operationId
+      function: truthy
+
+  shopify-storefront-graphql-content-type:
+    description: GraphQL endpoint should accept application/json content type
+    severity: warn
+    given: "$.paths[*].post.requestBody.content"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - application/json
+
+  shopify-storefront-graphql-response:
+    description: GraphQL responses should have data and errors fields
+    severity: warn
+    given: "$.components.schemas.GraphQLResponse.properties"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - data
+            - errors
+
+  shopify-storefront-gid-format:
+    description: Shopify Storefront API uses global IDs in gid://shopify/ format
+    severity: info
+    given: "$.components.schemas.*.properties.id"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            description:
+              type: string

@@ -1,0 +1,146 @@
+vocabulary:
+  title: Shopify Storefront API Vocabulary
+  description: >-
+    Core terminology and domain vocabulary for the Shopify Storefront GraphQL API.
+    Covers headless commerce concepts, storefront entities, cart management, and
+    customer-facing commerce operations.
+  version: "1.0"
+  created: "2026-05-02"
+  modified: "2026-05-02"
+  source: https://shopify.dev/docs/api/storefront
+
+terms:
+  - term: Storefront API
+    definition: >-
+      Shopify's public-facing GraphQL API for building custom storefronts and
+      headless commerce experiences. Provides read access to products and
+      collections, and write access for cart and customer operations.
+    related: [Admin API, Hydrogen, Headless Commerce]
+    tags: [API, Commerce]
+
+  - term: Headless Commerce
+    definition: >-
+      An e-commerce architecture where the front-end presentation layer is
+      decoupled from the back-end commerce logic. Shopify acts as the commerce
+      backend via the Storefront API while developers build custom front-ends.
+    related: [Storefront API, Hydrogen, Jamstack]
+    tags: [Architecture, Commerce]
+
+  - term: Hydrogen
+    definition: >-
+      Shopify's official React-based framework for building headless storefronts.
+      Built on Remix with React Server Components, streaming SSR, and optimized
+      Shopify data fetching utilities.
+    related: [Storefront API, React, Remix]
+    tags: [Framework, Commerce]
+
+  - term: Product
+    definition: >-
+      A storefront item available for purchase. Products have a title, description,
+      vendor, type, variants, images, and pricing information accessible via
+      the Storefront API.
+    related: [Variant, Collection, Pricing]
+    tags: [Catalog, Commerce]
+
+  - term: Variant
+    definition: >-
+      A specific purchasable version of a product defined by selected options
+      (e.g., Size: Large, Color: Blue). Each variant has its own price, SKU,
+      and availability status.
+    related: [Product, Cart, Line Item]
+    tags: [Catalog, Commerce]
+
+  - term: Collection
+    definition: >-
+      A curated grouping of products in the storefront. Collections can be
+      navigated by handle and queried for their constituent products.
+    related: [Product]
+    tags: [Catalog, Navigation]
+
+  - term: Cart
+    definition: >-
+      A temporary container for product variants selected for purchase.
+      Carts are created via the Storefront API, have a unique ID and checkout
+      URL, and can contain multiple line items.
+    related: [Line Item, Checkout, Cart Token]
+    tags: [Purchasing, Commerce]
+
+  - term: Cart Line
+    definition: >-
+      An entry in a cart representing a specific product variant and quantity.
+      Cart lines have their own ID and can be individually added or removed.
+    related: [Cart, Variant]
+    tags: [Purchasing, Commerce]
+
+  - term: Checkout URL
+    definition: >-
+      A unique URL generated when a cart is created that directs customers to
+      the Shopify-hosted checkout page to complete their purchase.
+    related: [Cart, Checkout]
+    tags: [Purchasing, Commerce]
+
+  - term: Storefront Access Token
+    definition: >-
+      A public access token that enables a storefront or app to query the
+      Storefront API. Unlike admin tokens, storefront access tokens have
+      read-only access to most resources.
+    related: [Authentication]
+    tags: [Security, Authentication]
+
+  - term: Global ID (GID)
+    definition: >-
+      A globally unique identifier format used in Shopify's GraphQL APIs.
+      Format: gid://shopify/{ResourceType}/{numericId} (e.g., gid://shopify/Product/123).
+    related: [Product, Variant, Cart]
+    tags: [API, Identifiers]
+
+  - term: MoneyV2
+    definition: >-
+      The Shopify money type containing a decimal amount string and an
+      ISO 4217 currency code (e.g., {amount: "29.99", currencyCode: "USD"}).
+    related: [Product, Variant, Cart]
+    tags: [Pricing, Commerce]
+
+  - term: Contextual Pricing
+    definition: >-
+      Shopify's ability to display different prices to different customers
+      based on context such as customer segment, country, or B2B pricing rules.
+    related: [Pricing, Markets, B2B]
+    tags: [Pricing, Commerce]
+
+  - term: Customer Access Token
+    definition: >-
+      A short-lived token issued when a customer logs in that enables
+      authenticated Storefront API queries for personal data (orders, addresses).
+    related: [Customer, Authentication]
+    tags: [Security, Authentication]
+
+  - term: Connection
+    definition: >-
+      The GraphQL pagination pattern used in the Storefront API. Connections
+      return edges containing nodes and pageInfo for cursor-based pagination.
+    related: [Cursor Pagination, GraphQL]
+    tags: [API, Pagination]
+
+  - term: Cursor Pagination
+    definition: >-
+      The pagination mechanism used by the Storefront API. Uses after/before
+      cursor arguments with first/last count arguments to navigate paginated
+      result sets.
+    related: [Connection, GraphQL]
+    tags: [API, Pagination]
+
+  - term: Metafield
+    definition: >-
+      Custom key-value data attached to Shopify resources (products, variants,
+      collections) that can be exposed via the Storefront API for custom
+      storefront experiences.
+    related: [Product, Variant, Collection]
+    tags: [Customization, Data]
+
+  - term: Selling Plan
+    definition: >-
+      Configuration for subscription-based or deferred payment purchasing.
+      Selling plans define billing policies for recurring orders.
+    related: [Product, Variant, Subscription]
+    tags: [Subscriptions, Commerce]

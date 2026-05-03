@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/shopify-storefront/json-schema/shopify-storefront-cart-schema.json",
+  "title": "Shopify Storefront Cart",
+  "description": "Schema for a Shopify cart as managed by the Storefront GraphQL API",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Global cart ID in gid://shopify/Cart/{token} format"
+    },
+    "checkoutUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to proceed to the Shopify-hosted checkout"
+    },
+    "totalQuantity": {
+      "type": "integer",
+      "description": "Total number of items across all cart lines"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the cart was created"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the cart was last updated"
+    },
+    "note": {
+      "type": ["string", "null"],
+      "description": "A note that the buyer provides on the cart"
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Custom attributes for the cart",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    },
+    "discountCodes": {
+      "type": "array",
+      "description": "Discount codes applied to the cart",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "applicable": { "type": "boolean" }
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "description": "The costs that the buyer will pay at checkout",
+      "properties": {
+        "totalAmount": {
+          "type": "object",
+          "properties": {
+            "amount": { "type": "string" },
+            "currencyCode": { "type": "string" }
+          }
+        },
+        "subtotalAmount": {
+          "type": "object",
+          "properties": {
+            "amount": { "type": "string" },
+            "currencyCode": { "type": "string" }
+          }
+        },
+        "totalTaxAmount": {
+          "type": ["object", "null"],
+          "properties": {
+            "amount": { "type": "string" },
+            "currencyCode": { "type": "string" }
+          }
+        },
+        "totalDutyAmount": {
+          "type": ["object", "null"],
+          "properties": {
+            "amount": { "type": "string" },
+            "currencyCode": { "type": "string" }
+          }
+        }
+      }
+    },
+    "lines": {
+      "type": "object",
+      "description": "Items in the cart",
+      "properties": {
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "node": {
+                "type": "object",
+                "description": "A cart line item",
+                "properties": {
+                  "id": { "type": "string" },
+                  "quantity": { "type": "integer" },
+                  "merchandise": {
+                    "type": "object",
+                    "description": "The product variant",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "title": { "type": "string" },
+                      "price": {
+                        "type": "object",
+                        "properties": {
+                          "amount": { "type": "string" },
+                          "currencyCode": { "type": "string" }
+                        }
+                      },
+                      "product": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "handle": { "type": "string" }
+                        }
+                      }
+                    }
+                  },
+                  "cost": {
+                    "type": "object",
+                    "properties": {
+                      "totalAmount": {
+                        "type": "object",
+                        "properties": {
+                          "amount": { "type": "string" },
+                          "currencyCode": { "type": "string" }
+                        }
+                      },
+                      "amountPerQuantity": {
+                        "type": "object",
+                        "properties": {
+                          "amount": { "type": "string" },
+                          "currencyCode": { "type": "string" }
+                        }
+                      }
+                    }
+                  },
+                  "attributes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": { "type": "string" },
+                        "value": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

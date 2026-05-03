@@ -1,0 +1,72 @@
+{
+  "summary": "Create Cart Mutation - GraphQL Example",
+  "description": "Example of creating a shopping cart via the Shopify Storefront GraphQL API",
+  "request": {
+    "method": "POST",
+    "url": "https://mystore.myshopify.com/api/2024-10/graphql.json",
+    "headers": {
+      "X-Shopify-Storefront-Access-Token": "your-storefront-access-token",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "query": "mutation cartCreate($input: CartInput!) {\n  cartCreate(input: $input) {\n    cart {\n      id\n      checkoutUrl\n      totalQuantity\n      cost {\n        totalAmount {\n          amount\n          currencyCode\n        }\n        subtotalAmount {\n          amount\n          currencyCode\n        }\n      }\n      lines(first: 10) {\n        edges {\n          node {\n            id\n            quantity\n            merchandise {\n              ... on ProductVariant {\n                id\n                title\n                price {\n                  amount\n                  currencyCode\n                }\n                product {\n                  title\n                  handle\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
+      "variables": {
+        "input": {
+          "lines": [
+            {
+              "quantity": 2,
+              "merchandiseId": "gid://shopify/ProductVariant/808950810"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "data": {
+        "cartCreate": {
+          "cart": {
+            "id": "gid://shopify/Cart/c1-a1b2c3d4e5f6",
+            "checkoutUrl": "https://mystore.myshopify.com/cart/c/a1b2c3d4e5f6",
+            "totalQuantity": 2,
+            "cost": {
+              "totalAmount": {
+                "amount": "59.98",
+                "currencyCode": "USD"
+              },
+              "subtotalAmount": {
+                "amount": "59.98",
+                "currencyCode": "USD"
+              }
+            },
+            "lines": {
+              "edges": [
+                {
+                  "node": {
+                    "id": "gid://shopify/CartLine/line-1",
+                    "quantity": 2,
+                    "merchandise": {
+                      "id": "gid://shopify/ProductVariant/808950810",
+                      "title": "Small / Blue",
+                      "price": {
+                        "amount": "29.99",
+                        "currencyCode": "USD"
+                      },
+                      "product": {
+                        "title": "Classic Cotton T-Shirt",
+                        "handle": "classic-cotton-t-shirt"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "userErrors": []
+        }
+      }
+    }
+  }
+}

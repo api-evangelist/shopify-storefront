@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/shopify-storefront/json-schema/shopify-storefront-product-schema.json",
+  "title": "Shopify Storefront Product",
+  "description": "Schema for a Shopify product as returned by the Storefront GraphQL API",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Global ID in gid://shopify/Product/{id} format"
+    },
+    "title": {
+      "type": "string",
+      "description": "The product title"
+    },
+    "handle": {
+      "type": "string",
+      "description": "URL-friendly unique identifier for the product"
+    },
+    "description": {
+      "type": "string",
+      "description": "Plain text description of the product"
+    },
+    "descriptionHtml": {
+      "type": "string",
+      "description": "HTML description of the product"
+    },
+    "productType": {
+      "type": "string",
+      "description": "Product type category"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Product vendor or manufacturer"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags associated with the product"
+    },
+    "availableForSale": {
+      "type": "boolean",
+      "description": "Whether the product is available for purchase"
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date the product was published to the storefront"
+    },
+    "priceRange": {
+      "type": "object",
+      "description": "The price range of the product across all variants",
+      "properties": {
+        "minVariantPrice": { "$ref": "#/$defs/MoneyV2" },
+        "maxVariantPrice": { "$ref": "#/$defs/MoneyV2" }
+      }
+    },
+    "compareAtPriceRange": {
+      "type": "object",
+      "description": "The compare-at price range (original price before sale)",
+      "properties": {
+        "minVariantPrice": { "$ref": "#/$defs/MoneyV2" },
+        "maxVariantPrice": { "$ref": "#/$defs/MoneyV2" }
+      }
+    },
+    "featuredImage": {
+      "$ref": "#/$defs/Image",
+      "nullable": true
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "nullable": true },
+        "description": { "type": "string", "nullable": true }
+      }
+    },
+    "variants": {
+      "type": "object",
+      "description": "Paginated connection of product variants",
+      "properties": {
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "node": { "$ref": "#/$defs/ProductVariant" }
+            }
+          }
+        },
+        "pageInfo": { "$ref": "#/$defs/PageInfo" }
+      }
+    },
+    "images": {
+      "type": "object",
+      "description": "Paginated connection of product images",
+      "properties": {
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "node": { "$ref": "#/$defs/Image" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "MoneyV2": {
+      "type": "object",
+      "description": "A monetary value with currency",
+      "properties": {
+        "amount": { "type": "string", "description": "Decimal monetary amount" },
+        "currencyCode": { "type": "string", "description": "ISO 4217 currency code" }
+      }
+    },
+    "ProductVariant": {
+      "type": "object",
+      "description": "A specific version of a product",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "availableForSale": { "type": "boolean" },
+        "sku": { "type": ["string", "null"] },
+        "price": { "$ref": "#/$defs/MoneyV2" },
+        "compareAtPrice": { "$ref": "#/$defs/MoneyV2", "nullable": true },
+        "weight": { "type": "number" },
+        "weightUnit": { "type": "string", "enum": ["GRAMS", "KILOGRAMS", "OUNCES", "POUNDS"] },
+        "selectedOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "string" }
+            }
+          }
+        },
+        "image": { "$ref": "#/$defs/Image", "nullable": true }
+      }
+    },
+    "Image": {
+      "type": "object",
+      "description": "An image resource",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "altText": { "type": ["string", "null"] },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "PageInfo": {
+      "type": "object",
+      "description": "Pagination information for connections",
+      "properties": {
+        "hasNextPage": { "type": "boolean" },
+        "hasPreviousPage": { "type": "boolean" },
+        "startCursor": { "type": "string", "nullable": true },
+        "endCursor": { "type": "string", "nullable": true }
+      }
+    }
+  }
+}

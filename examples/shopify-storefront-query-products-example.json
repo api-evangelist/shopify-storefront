@@ -1,0 +1,69 @@
+{
+  "summary": "Query Products - GraphQL Example",
+  "description": "Example of querying products from the Shopify Storefront GraphQL API",
+  "request": {
+    "method": "POST",
+    "url": "https://mystore.myshopify.com/api/2024-10/graphql.json",
+    "headers": {
+      "X-Shopify-Storefront-Access-Token": "your-storefront-access-token",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "query": "{\n  products(first: 3) {\n    edges {\n      node {\n        id\n        title\n        handle\n        description\n        availableForSale\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n          maxVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        variants(first: 5) {\n          edges {\n            node {\n              id\n              title\n              price {\n                amount\n                currencyCode\n              }\n              availableForSale\n              sku\n            }\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "data": {
+        "products": {
+          "edges": [
+            {
+              "node": {
+                "id": "gid://shopify/Product/632910392",
+                "title": "Classic Cotton T-Shirt",
+                "handle": "classic-cotton-t-shirt",
+                "description": "A comfortable, everyday cotton t-shirt available in multiple colors.",
+                "availableForSale": true,
+                "priceRange": {
+                  "minVariantPrice": {
+                    "amount": "29.99",
+                    "currencyCode": "USD"
+                  },
+                  "maxVariantPrice": {
+                    "amount": "34.99",
+                    "currencyCode": "USD"
+                  }
+                },
+                "variants": {
+                  "edges": [
+                    {
+                      "node": {
+                        "id": "gid://shopify/ProductVariant/808950810",
+                        "title": "Small / Blue",
+                        "price": {
+                          "amount": "29.99",
+                          "currencyCode": "USD"
+                        },
+                        "availableForSale": true,
+                        "sku": "CCT-S-BLU"
+                      }
+                    }
+                  ]
+                },
+                "featuredImage": {
+                  "url": "https://cdn.shopify.com/s/files/1/0001/classic-cotton-tshirt.jpg",
+                  "altText": "Classic Cotton T-Shirt"
+                }
+              }
+            }
+          ],
+          "pageInfo": {
+            "hasNextPage": true,
+            "endCursor": "eyJsYXN0X2lkIjo2MzI5MTAzOTIsImxhc3RfdmFsdWUiOiI2MzI5MTAzOTIifQ=="
+          }
+        }
+      }
+    }
+  }
+}
