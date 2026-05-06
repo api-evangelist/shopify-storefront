@@ -4,99 +4,52 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Shopify Storefront API
 providerId: shopify-storefront
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: true
 tags:
   - Commerce
   - Ecommerce
   - Headless
   - GraphQL
   - Storefront
-  - Products
-  - Cart
-  - Checkout
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Shopify Storefront API API surface. Captures
-  per-tier quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values
-  to be replaced with published provider limits.
-headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+description: Shopify documents that the Storefront API has no rate limits applied on the number of
+  requests. Suspicious traffic can be rejected with 430, and there is a per-minute checkout creation
+  throttle that returns a 200-with-Throttled error when exceeded.
+sources:
+  - https://shopify.dev/docs/api/usage/rate-limits
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+  securityRejection: 430
+  checkoutThrottled: 200
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
+  - name: Storefront API requests
+    scope: shop
+    metric: requests
+    limit: no published rate limit
+    notes: Shopify states there are no rate limits applied on the number of requests that can be made
+      to the Storefront API.
+  - name: Checkout creation throttle
+    scope: shop
+    metric: checkouts_per_minute
+    limit: see docs
     timeFrame: minute
-    applies:
-      - Shopify Storefront API
-      - Shopify Hydrogen
-      - Shopify Buy SDK
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Shopify Storefront API
-      - Shopify Hydrogen
-      - Shopify Buy SDK
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Shopify Storefront API
-      - Shopify Hydrogen
-      - Shopify Buy SDK
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Shopify Storefront API
-      - Shopify Hydrogen
-      - Shopify Buy SDK
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Shopify Storefront API
-      - Shopify Hydrogen
-      - Shopify Buy SDK
+    notes: A throttle exists on checkouts created per minute; exceeding it returns a 200 response with
+      a "Throttled" error.
+  - name: Security rejection
+    scope: client
+    metric: requests
+    limit: see docs
+    notes: Suspicious traffic patterns can be rejected with HTTP 430 Shopify Security Rejection.
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  - name: No Per-Request Rate Limit
+    description: Storefront API does not enforce a published per-second or per-minute request rate
+      ceiling; clients should still implement reasonable client-side throttling and caching.
+  - name: Checkout-Specific Throttling
+    description: Checkout-creation traffic is throttled separately from product/cart reads. Retry on
+      the next bucket window when a Throttled error is received.
+  - name: Security Posture
+    description: Bot-like or abusive request patterns may be rejected with 430. Identify clients with
+      a unique user agent and respect Retry-After when present.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

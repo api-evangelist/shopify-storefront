@@ -4,152 +4,154 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Shopify Storefront API
 providerId: shopify-storefront
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: true
 tags:
   - Commerce
   - Ecommerce
   - Headless
   - GraphQL
   - Storefront
-  - Products
-  - Cart
-  - Checkout
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+description: The Shopify Storefront API is bundled with every Shopify commerce subscription and has
+  no separate API SKU and no published per-call rate limits. Cost surfaces are the underlying commerce
+  plan (Basic, Grow, Advanced, Plus, Enterprise) and standard payment processing fees applied to orders
+  placed via the Storefront.
+sources:
+  - https://www.shopify.com/pricing
+  - https://shopify.dev/docs/api/usage/rate-limits
 plans:
-  - id: shopify-storefront-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the Shopify Storefront API API surface. Intended for evaluation,
-      prototyping, and low-volume integrations. Real limits and pricing must be reconciled with the provider's
-      published plan documentation.
+  - id: shopify-storefront-basic
+    name: Basic
+    type: subscription
+    description: Storefront API access included with the Basic commerce plan.
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
         timeFrame: month
         geo: global
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
         unit: 1
-        price: '0.00'
+        price: '$29/month (billed yearly)'
         userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
+      - label: Online card rate
+        name: card_online
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
         unit: 1
-        price: '0.00'
+        price: '2.9% + 30¢'
         userMultiplied: false
     elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
       - name: Shopify Storefront API
       - name: Shopify Hydrogen
       - name: Shopify Buy SDK
-  - id: shopify-storefront-pro
-    name: Professional
-    type: paid
-    description: Production tier for Shopify Storefront API. Provides higher quotas, priority support,
-      and access to the broader API portfolio. Pricing placeholder; align with the provider's pricing
-      page.
+  - id: shopify-storefront-grow
+    name: Grow
+    type: subscription
+    description: Storefront API access included with the Grow commerce plan.
     entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
         timeFrame: month
         geo: global
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
         unit: 1
-        price: TBD
+        price: '$79/month (billed yearly)'
         userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
+      - label: Online card rate
+        name: card_online
         type: metered
-        metric: requests
+        metric: transaction
         limit: -1
-        timeFrame: month
-        geo: global
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
-        unit: 1000
-        price: TBD
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: '2.7% + 30¢'
         userMultiplied: false
     elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
+      - name: Shopify Storefront API
+      - name: Shopify Hydrogen
+      - name: Shopify Buy SDK
+  - id: shopify-storefront-advanced
+    name: Advanced
+    type: subscription
+    description: Storefront API access included with the Advanced commerce plan.
+    entries:
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '$299/month (billed yearly)'
+        userMultiplied: false
+      - label: Online card rate
+        name: card_online
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: '2.5% + 30¢'
+        userMultiplied: false
+    elements:
+      - name: Shopify Storefront API
+      - name: Shopify Hydrogen
+      - name: Shopify Buy SDK
+  - id: shopify-storefront-plus
+    name: Plus
+    type: subscription
+    description: Storefront API access included with Shopify Plus.
+    entries:
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '$2,300/month (billed yearly on 3-year term)'
+        userMultiplied: false
+      - label: Card rate
+        name: card_rate
+        type: metered
+        metric: transaction
+        limit: -1
+        timeFrame: usage
+        geo: US
+        unit: 1
+        price: '2.25% + 30¢'
+        userMultiplied: false
+    elements:
       - name: Shopify Storefront API
       - name: Shopify Hydrogen
       - name: Shopify Buy SDK
   - id: shopify-storefront-enterprise
     name: Enterprise
     type: enterprise
-    description: Custom-negotiated tier for Shopify Storefront API. Includes dedicated capacity, contractual
-      SLAs, security review, data residency options, and named technical account management.
+    description: Negotiated enterprise commerce plan; Storefront API access included.
     entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
         timeFrame: month
-        geo: configurable
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
+        geo: global
         unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains:
-          - https://{store_name}.myshopify.com/api/2024-10/graphql.json
-        unit: 1
-        price: custom
+        price: contact sales
         userMultiplied: false
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
       - name: Shopify Storefront API
       - name: Shopify Hydrogen
       - name: Shopify Buy SDK
