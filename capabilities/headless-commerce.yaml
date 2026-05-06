@@ -1,267 +1,410 @@
-naftiko: "1.0.0-alpha1"
-
+naftiko: 1.0.0-alpha2
 info:
-  label: "Shopify Headless Commerce"
-  description: >-
-    Workflow capability for building headless Shopify commerce experiences.
-    Combines product discovery, collection browsing, search, cart management,
-    and customer account operations into a unified capability for front-end
-    developers building custom storefronts with frameworks like Next.js, Nuxt,
-    Remix, or Shopify Hydrogen.
+  label: Shopify Headless Commerce
+  description: Workflow capability for building headless Shopify commerce experiences. Combines product discovery, collection
+    browsing, search, cart management, and customer account operations into a unified capability for front-end developers
+    building custom storefronts with frameworks like Next.js, Nuxt, Remix, or Shopify Hydrogen.
   tags:
-    - Commerce
-    - Ecommerce
-    - Headless
-    - GraphQL
-    - Storefront
-    - Cart
-    - Checkout
-  created: "2026-05-02"
-  modified: "2026-05-02"
-
+  - Commerce
+  - Ecommerce
+  - Headless
+  - GraphQL
+  - Storefront
+  - Cart
+  - Checkout
+  created: '2026-05-02'
+  modified: '2026-05-06'
 binds:
-  - namespace: env
-    keys:
-      SHOPIFY_STOREFRONT_ACCESS_TOKEN: SHOPIFY_STOREFRONT_ACCESS_TOKEN
-      SHOPIFY_STORE_NAME: SHOPIFY_STORE_NAME
-
+- namespace: env
+  keys:
+    SHOPIFY_STOREFRONT_ACCESS_TOKEN: SHOPIFY_STOREFRONT_ACCESS_TOKEN
+    SHOPIFY_STORE_NAME: SHOPIFY_STORE_NAME
 capability:
   consumes:
-    - import: shopify-storefront
-      location: ./shared/shopify-storefront.yaml
-
+  - type: http
+    namespace: shopify-storefront
+    baseUri: https://{{env.SHOPIFY_STORE_NAME}}.myshopify.com/api/2024-10/graphql.json
+    description: Shopify Storefront GraphQL API
+    authentication:
+      type: apikey
+      key: X-Shopify-Storefront-Access-Token
+      value: '{{env.SHOPIFY_STOREFRONT_ACCESS_TOKEN}}'
+      placement: header
+    resources:
+    - name: graphql
+      path: /
+      description: GraphQL endpoint for all Storefront API queries and mutations
+      operations:
+      - name: get-products
+        method: POST
+        description: Query products from the storefront catalog
+        body:
+          type: json
+          data:
+            query: '{ products(first: {{tools.limit}}) { edges { node { id title handle description priceRange { minVariantPrice
+              { amount currencyCode } } availableForSale } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.products
+      - name: get-product-by-handle
+        method: POST
+        description: Query a specific product by its URL handle
+        body:
+          type: json
+          data:
+            query: '{ productByHandle(handle: "{{tools.handle}}") { id title description variants(first: 20) { edges { node
+              { id title price { amount currencyCode } availableForSale } } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.productByHandle
+      - name: get-collections
+        method: POST
+        description: Query product collections
+        body:
+          type: json
+          data:
+            query: '{ collections(first: {{tools.limit}}) { edges { node { id title handle description } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.collections
+      - name: get-collection-products
+        method: POST
+        description: Query products within a specific collection
+        body:
+          type: json
+          data:
+            query: '{ collectionByHandle(handle: "{{tools.handle}}") { products(first: {{tools.limit}}) { edges { node { id
+              title handle priceRange { minVariantPrice { amount currencyCode } } } } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.collectionByHandle.products
+      - name: create-cart
+        method: POST
+        description: Create a new shopping cart
+        body:
+          type: json
+          data:
+            query: 'mutation cartCreate($input: CartInput!) { cartCreate(input: $input) { cart { id checkoutUrl totalQuantity
+              cost { totalAmount { amount currencyCode } } } } }'
+            variables:
+              input:
+                lines: '{{tools.lines}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.cartCreate.cart
+      - name: get-cart
+        method: POST
+        description: Retrieve a cart by ID
+        body:
+          type: json
+          data:
+            query: '{ cart(id: "{{tools.cart_id}}") { id checkoutUrl totalQuantity cost { totalAmount { amount currencyCode
+              } subtotalAmount { amount currencyCode } } lines(first: 20) { edges { node { id quantity merchandise { ... on
+              ProductVariant { id title price { amount currencyCode } product { title handle } } } } } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.cart
+      - name: add-to-cart
+        method: POST
+        description: Add items to an existing cart
+        body:
+          type: json
+          data:
+            query: 'mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines:
+              $lines) { cart { id totalQuantity cost { totalAmount { amount currencyCode } } } } }'
+            variables:
+              cartId: '{{tools.cart_id}}'
+              lines: '{{tools.lines}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.cartLinesAdd.cart
+      - name: remove-from-cart
+        method: POST
+        description: Remove items from a cart
+        body:
+          type: json
+          data:
+            query: 'mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds)
+              { cart { id totalQuantity } } }'
+            variables:
+              cartId: '{{tools.cart_id}}'
+              lineIds: '{{tools.line_ids}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.cartLinesRemove.cart
+      - name: get-customer
+        method: POST
+        description: Retrieve authenticated customer information
+        body:
+          type: json
+          data:
+            query: '{ customer(customerAccessToken: "{{tools.customer_access_token}}") { id email firstName lastName orders(first:
+              10) { edges { node { id orderNumber totalPrice { amount currencyCode } } } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.customer
+      - name: search-products
+        method: POST
+        description: Search products by query string
+        body:
+          type: json
+          data:
+            query: '{ products(first: {{tools.limit}}, query: "{{tools.search_query}}") { edges { node { id title handle description
+              priceRange { minVariantPrice { amount currencyCode } } availableForSale } } } }'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.data.products
   exposes:
-    - type: rest
-      port: 8080
-      namespace: shopify-headless-commerce-api
-      description: "Unified REST API for headless Shopify commerce experiences."
-      resources:
-        - path: /v1/products
-          name: products
-          description: Product catalog browsing and search
-          operations:
-            - method: GET
-              name: get-products
-              description: Browse all available products
-              call: "shopify-storefront.get-products"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/products/{handle}
-          name: product-detail
-          description: Product detail page data
-          operations:
-            - method: GET
-              name: get-product-by-handle
-              description: Get full product details by URL handle
-              call: "shopify-storefront.get-product-by-handle"
-              with:
-                handle: "rest.handle"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/collections
-          name: collections
-          description: Product collection catalog
-          operations:
-            - method: GET
-              name: get-collections
-              description: Browse product collections
-              call: "shopify-storefront.get-collections"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/collections/{handle}/products
-          name: collection-products
-          description: Products within a collection
-          operations:
-            - method: GET
-              name: get-collection-products
-              description: List products in a specific collection
-              call: "shopify-storefront.get-collection-products"
-              with:
-                handle: "rest.handle"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/search
-          name: search
-          description: Product search
-          operations:
-            - method: GET
-              name: search-products
-              description: Search products by keyword
-              call: "shopify-storefront.search-products"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/cart
-          name: cart
-          description: Cart creation
-          operations:
-            - method: POST
-              name: create-cart
-              description: Create a new shopping cart
-              call: "shopify-storefront.create-cart"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/cart/{id}
-          name: cart-detail
-          description: Cart retrieval
-          operations:
-            - method: GET
-              name: get-cart
-              description: Get cart contents and cost summary
-              call: "shopify-storefront.get-cart"
-              with:
-                cart_id: "rest.id"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/cart/{id}/lines
-          name: cart-lines
-          description: Cart line item management
-          operations:
-            - method: POST
-              name: add-to-cart
-              description: Add items to cart
-              call: "shopify-storefront.add-to-cart"
-              with:
-                cart_id: "rest.id"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-            - method: DELETE
-              name: remove-from-cart
-              description: Remove items from cart
-              call: "shopify-storefront.remove-from-cart"
-              with:
-                cart_id: "rest.id"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-        - path: /v1/customer
-          name: customer
-          description: Customer account
-          operations:
-            - method: GET
-              name: get-customer
-              description: Get authenticated customer data
-              call: "shopify-storefront.get-customer"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-    - type: mcp
-      port: 9090
-      namespace: shopify-headless-commerce-mcp
-      transport: http
-      description: "MCP server for AI-assisted headless Shopify storefront development."
-      tools:
-        - name: get-products
-          description: Browse all products available in the storefront catalog
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-products"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-product-by-handle
-          description: Retrieve complete product details including variants and images by URL handle
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-product-by-handle"
-          with:
-            handle: "tools.handle"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-collections
-          description: Browse product collections available in the storefront
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-collections"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-collection-products
-          description: List all products within a specific collection by handle
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-collection-products"
-          with:
-            handle: "tools.handle"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: search-products
-          description: Search the product catalog by keyword, title, tag, or type
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.search-products"
-          with:
-            search_query: "tools.search_query"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: create-cart
-          description: Create a new shopping cart, optionally with initial product variant line items
-          hints:
-            readOnly: false
-            destructive: false
-          call: "shopify-storefront.create-cart"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-cart
-          description: Retrieve a shopping cart with line items and pricing totals
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-cart"
-          with:
-            cart_id: "tools.cart_id"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: add-to-cart
-          description: Add one or more product variants to an existing cart
-          hints:
-            readOnly: false
-            destructive: false
-          call: "shopify-storefront.add-to-cart"
-          with:
-            cart_id: "tools.cart_id"
-            lines: "tools.lines"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: remove-from-cart
-          description: Remove specific line items from a shopping cart
-          hints:
-            readOnly: false
-            destructive: true
-          call: "shopify-storefront.remove-from-cart"
-          with:
-            cart_id: "tools.cart_id"
-            line_ids: "tools.line_ids"
-          outputParameters:
-            - type: object
-              mapping: "$."
-        - name: get-customer
-          description: Retrieve authenticated customer profile and recent order history
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "shopify-storefront.get-customer"
-          with:
-            customer_access_token: "tools.customer_access_token"
-          outputParameters:
-            - type: object
-              mapping: "$."
+  - type: rest
+    port: 8080
+    namespace: shopify-headless-commerce-api
+    description: Unified REST API for headless Shopify commerce experiences.
+    resources:
+    - path: /v1/products
+      name: products
+      description: Product catalog browsing and search
+      operations:
+      - method: GET
+        name: get-products
+        description: Browse all available products
+        call: shopify-storefront.get-products
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/products/{handle}
+      name: product-detail
+      description: Product detail page data
+      operations:
+      - method: GET
+        name: get-product-by-handle
+        description: Get full product details by URL handle
+        call: shopify-storefront.get-product-by-handle
+        with:
+          handle: rest.handle
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/collections
+      name: collections
+      description: Product collection catalog
+      operations:
+      - method: GET
+        name: get-collections
+        description: Browse product collections
+        call: shopify-storefront.get-collections
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/collections/{handle}/products
+      name: collection-products
+      description: Products within a collection
+      operations:
+      - method: GET
+        name: get-collection-products
+        description: List products in a specific collection
+        call: shopify-storefront.get-collection-products
+        with:
+          handle: rest.handle
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/search
+      name: search
+      description: Product search
+      operations:
+      - method: GET
+        name: search-products
+        description: Search products by keyword
+        call: shopify-storefront.search-products
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cart
+      name: cart
+      description: Cart creation
+      operations:
+      - method: POST
+        name: create-cart
+        description: Create a new shopping cart
+        call: shopify-storefront.create-cart
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cart/{id}
+      name: cart-detail
+      description: Cart retrieval
+      operations:
+      - method: GET
+        name: get-cart
+        description: Get cart contents and cost summary
+        call: shopify-storefront.get-cart
+        with:
+          cart_id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/cart/{id}/lines
+      name: cart-lines
+      description: Cart line item management
+      operations:
+      - method: POST
+        name: add-to-cart
+        description: Add items to cart
+        call: shopify-storefront.add-to-cart
+        with:
+          cart_id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: remove-from-cart
+        description: Remove items from cart
+        call: shopify-storefront.remove-from-cart
+        with:
+          cart_id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/customer
+      name: customer
+      description: Customer account
+      operations:
+      - method: GET
+        name: get-customer
+        description: Get authenticated customer data
+        call: shopify-storefront.get-customer
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: shopify-headless-commerce-mcp
+    transport: http
+    description: MCP server for AI-assisted headless Shopify storefront development.
+    tools:
+    - name: get-products
+      description: Browse all products available in the storefront catalog
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-products
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-product-by-handle
+      description: Retrieve complete product details including variants and images by URL handle
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-product-by-handle
+      with:
+        handle: tools.handle
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-collections
+      description: Browse product collections available in the storefront
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-collections
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-collection-products
+      description: List all products within a specific collection by handle
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-collection-products
+      with:
+        handle: tools.handle
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: search-products
+      description: Search the product catalog by keyword, title, tag, or type
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.search-products
+      with:
+        search_query: tools.search_query
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-cart
+      description: Create a new shopping cart, optionally with initial product variant line items
+      hints:
+        readOnly: false
+        destructive: false
+      call: shopify-storefront.create-cart
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-cart
+      description: Retrieve a shopping cart with line items and pricing totals
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-cart
+      with:
+        cart_id: tools.cart_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-to-cart
+      description: Add one or more product variants to an existing cart
+      hints:
+        readOnly: false
+        destructive: false
+      call: shopify-storefront.add-to-cart
+      with:
+        cart_id: tools.cart_id
+        lines: tools.lines
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-from-cart
+      description: Remove specific line items from a shopping cart
+      hints:
+        readOnly: false
+        destructive: true
+      call: shopify-storefront.remove-from-cart
+      with:
+        cart_id: tools.cart_id
+        line_ids: tools.line_ids
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-customer
+      description: Retrieve authenticated customer profile and recent order history
+      hints:
+        readOnly: true
+        openWorld: true
+      call: shopify-storefront.get-customer
+      with:
+        customer_access_token: tools.customer_access_token
+      outputParameters:
+      - type: object
+        mapping: $.
