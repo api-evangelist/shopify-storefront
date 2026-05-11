@@ -114,6 +114,13 @@ apis:
       - type: SDK
         url: https://github.com/Shopify/js-buy-sdk
 
+common:
+  - type: Integrations
+    url: https://shopify.dev/docs/apps/build
+integrations:
+  - name: Docs page
+  - name: Scaffold an app
+  - name: Build an app
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
