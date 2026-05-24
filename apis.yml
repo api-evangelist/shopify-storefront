@@ -108,6 +108,8 @@ common:
   url: https://www.linkedin.com/company/shopify
 - type: Integrations
   url: https://shopify.dev/docs/apps/build
+- type: LLMsTxt
+  url: https://shopify.dev/llms.txt
 integrations:
 - name: Docs page
 - name: Scaffold an app
