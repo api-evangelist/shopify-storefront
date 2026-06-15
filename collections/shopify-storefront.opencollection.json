@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Shopify Storefront API",
+    "version": "2024-10"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Shopify-Storefront-Access-Token",
+      "value": "{{X-Shopify-Storefront-Access-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "GraphQL",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute Storefront Query",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{store_name}.myshopify.com/api/2024-10/graphql.json/graphql",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute a GraphQL query or mutation against the Shopify Storefront API. Common operations include querying products, collections, cart management, and checkout. All requests require a valid Storefront API access token passed in the X-Shopify-Storefront-Access-Token header."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

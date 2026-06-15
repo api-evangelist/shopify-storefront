@@ -1,54 +1,114 @@
-# Shopify Storefront API
+# Shopify Storefront API (shopify-storefront)
 
 The Shopify Storefront API is a GraphQL API that enables developers to build custom headless storefronts, purchasing flows, and commerce experiences using Shopify as a backend. The API provides programmatic access to products, collections, carts, checkout, customer accounts, and contextual pricing. It is designed for headless commerce architectures and powers the Shopify Hydrogen framework.
 
-**Human URL:** [https://shopify.dev/docs/api/storefront](https://shopify.dev/docs/api/storefront)
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/shopify-storefront/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/shopify-storefront/refs/heads/main/apis.yml)
+
+## Scope
+
+- **Type:** Index
+
+## Tags
+
+- Commerce
+- Ecommerce
+- Headless
+- GraphQL
+- Storefront
+- Products
+- Cart
+- Checkout
+
+## Timestamps
+
+- **Created:** 2026-05-02
+- **Modified:** 2026-05-19
 
 ## APIs
 
 ### Shopify Storefront API
-- **Documentation:** https://shopify.dev/docs/api/storefront
-- **Reference:** https://shopify.dev/docs/api/storefront/latest
-- **Authentication:** Storefront Access Token (X-Shopify-Storefront-Access-Token header)
+
+The Shopify Storefront API is a GraphQL API for building headless commerce experiences. It provides access to products, collections, cart, checkout, customer accounts, and contextual pricing. All requests use GraphQL over HTTPS and require a Storefront API access token. The Storefront API supports both unauthenticated (public) and customer-authenticated access patterns.
+
+- **Human URL:** [https://shopify.dev/docs/api/storefront](https://shopify.dev/docs/api/storefront)
 - **Base URL:** `https://{store_name}.myshopify.com/api/2024-10/graphql.json`
-- **Getting Started:** https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/getting-started
+
+#### Tags
+
+- Commerce
+- Ecommerce
+- Headless
+- GraphQL
+- Products
+- Cart
+- Checkout
+
+#### Properties
+
+- [Documentation](https://shopify.dev/docs/api/storefront)
+- [Reference](https://shopify.dev/docs/api/storefront/latest)
+- [Getting Started](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/getting-started)
+- [Authentication](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/get-started-with-the-storefront-api)
+- [Rate Limits](https://shopify.dev/docs/api/usage/rate-limits)
+- [Versioning](https://shopify.dev/docs/api/usage/versioning)
+- [OpenAPI](openapi/shopify-storefront-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/shopify-storefront.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/shopify-storefront.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [JSON Schema](json-schema/shopify-storefront-product-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](json-schema/shopify-storefront-cart-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON-LD](json-ld/shopify-storefront-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
+- [Spectral Rules](rules/shopify-storefront-rules.yml)
+- [Vocabulary](vocabulary/shopify-storefront-vocabulary.yml)
 
 ### Shopify Hydrogen
-- **Documentation:** https://shopify.dev/docs/storefronts/headless/hydrogen
-- **GitHub:** https://github.com/Shopify/hydrogen
+
+Hydrogen is Shopify's opinionated React-based framework for building headless storefronts powered by the Storefront API. Hydrogen provides components, hooks, and utilities optimized for commerce including streaming SSR, React Server Components, and built-in Shopify data fetching.
+
+- **Human URL:** [https://shopify.dev/docs/storefronts/headless/hydrogen](https://shopify.dev/docs/storefronts/headless/hydrogen)
+
+#### Tags
+
+- Commerce
+- Headless
+- React
+- Framework
+- SSR
+
+#### Properties
+
+- [Documentation](https://shopify.dev/docs/storefronts/headless/hydrogen)
+- [Getting Started](https://shopify.dev/docs/storefronts/headless/hydrogen/getting-started)
+- [SDK](https://github.com/Shopify/hydrogen)
+- [Postman Collection](collections/shopify-storefront.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/shopify-storefront.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
 
 ### Shopify Buy SDK
-- **Documentation:** https://shopify.github.io/js-buy-sdk/
-- **GitHub:** https://github.com/Shopify/js-buy-sdk
 
-## Artifacts
+The Shopify JavaScript Buy SDK is a lightweight library that enables developers to integrate Shopify's storefront capabilities into any website or application. The SDK wraps the Storefront API and provides methods for fetching products, collections, and managing carts.
 
-### OpenAPI Specifications
-- [shopify-storefront-openapi.yml](openapi/shopify-storefront-openapi.yml)
+- **Human URL:** [https://shopify.github.io/js-buy-sdk/](https://shopify.github.io/js-buy-sdk/)
 
-### JSON Schemas
-- [shopify-storefront-product-schema.json](json-schema/shopify-storefront-product-schema.json)
-- [shopify-storefront-cart-schema.json](json-schema/shopify-storefront-cart-schema.json)
+#### Tags
 
-### JSON Structure
-- [shopify-storefront-cart-structure.json](json-structure/shopify-storefront-cart-structure.json)
+- Commerce
+- JavaScript
+- SDK
+- Cart
 
-### JSON-LD Context
-- [shopify-storefront-context.jsonld](json-ld/shopify-storefront-context.jsonld)
+#### Properties
 
-### Examples
-- [shopify-storefront-query-products-example.json](examples/shopify-storefront-query-products-example.json)
-- [shopify-storefront-create-cart-example.json](examples/shopify-storefront-create-cart-example.json)
+- [Documentation](https://shopify.github.io/js-buy-sdk/)
+- [SDK](https://github.com/Shopify/js-buy-sdk)
+- [Postman Collection](collections/shopify-storefront.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/shopify-storefront.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
 
-### Rules
-- [shopify-storefront-rules.yml](rules/shopify-storefront-rules.yml)
+## Common Properties
 
-### Capabilities
-- [headless-commerce.yaml](capabilities/headless-commerce.yaml) — Products, collections, search, cart, and customer operations
-
-### Vocabulary
-- [shopify-storefront-vocabulary.yml](vocabulary/shopify-storefront-vocabulary.yml)
+- [LinkedIn](https://www.linkedin.com/company/shopify)
+- [Integrations](https://shopify.dev/docs/apps/build)
+- [L L Ms Txt](https://shopify.dev/llms.txt)
 
 ## Maintainers
 
-**Kin Lane** - kin@apievangelist.com
+**FN:** Kin Lane
+**Email:** kin@apievangelist.com
