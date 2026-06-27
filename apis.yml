@@ -87,7 +87,7 @@ apis:
     url: https://shopify.dev/docs/storefronts/headless/hydrogen
   - type: GettingStarted
     url: https://shopify.dev/docs/storefronts/headless/hydrogen/getting-started
-  - type: SDK
+  - type: SDKs
     url: https://github.com/Shopify/hydrogen
 - aid: shopify-storefront:shopify-buy-sdk
   name: Shopify Buy SDK
@@ -104,14 +104,14 @@ apis:
   properties:
   - type: Documentation
     url: https://shopify.github.io/js-buy-sdk/
-  - type: SDK
+  - type: SDKs
     url: https://github.com/Shopify/js-buy-sdk
 common:
 - type: LinkedIn
   url: https://www.linkedin.com/company/shopify
 - type: Integrations
   url: https://shopify.dev/docs/apps/build
-- type: LLMsTxt
+- type: LlmsText
   url: https://shopify.dev/llms.txt
 integrations:
 - name: Docs page
