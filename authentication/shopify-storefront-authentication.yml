@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/shopify-storefront-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: StorefrontAccessToken
+  type: apiKey
+  in: header
+  parameter: X-Shopify-Storefront-Access-Token
+  description: Public Storefront API access token for the store
+  sources:
+  - openapi/shopify-storefront-openapi.yml
