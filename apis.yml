@@ -107,6 +107,8 @@ apis:
   - type: SDKs
     url: https://github.com/Shopify/js-buy-sdk
 common:
+- type: AgenticAccess
+  url: agentic-access/shopify-storefront-agentic-access.yml
 - type: DomainSecurity
   url: security/shopify-storefront-domain-security.yml
 - type: Authentication
