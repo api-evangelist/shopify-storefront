@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: Shopify Storefront GraphQL API
+  description: The Shopify Storefront API is a GraphQL API that enables developers to build custom storefronts, headless commerce experiences, and purchasing flows using Shopify's commerce primitives. It provides access to products, collections, cart, checkout, customer accounts, and contextual pricing. The API is designed for headless commerce architectures using frameworks like Next.js, Nuxt, Remix, or Shopify Hydrogen.
+  version: 2024-10
+  termsOfService: https://www.shopify.com/legal/api-terms
+  contact:
+    name: Shopify Developer Support
+    url: https://shopify.dev/docs/api/storefront
+  license:
+    name: API Terms of Service
+    url: https://www.shopify.com/legal/api-terms
+servers:
+- url: https://{store_name}.myshopify.com/api/2024-10/graphql.json
+  description: Shopify Storefront GraphQL API
+  variables:
+    store_name:
+      description: The name of the Shopify store
+      default: mystore
+security:
+- StorefrontAccessToken: []
+tags:
+- name: GraphQL
+paths:
+  /graphql:
+    post:
+      operationId: executeStorefrontQuery
+      summary: Execute Storefront Query
+      description: Execute a GraphQL query or mutation against the Shopify Storefront API. Common operations include querying products, collections, cart management, and checkout. All requests require a valid Storefront API access token passed in the X-Shopify-Storefront-Access-Token header.
+      tags:
+      - GraphQL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLRequest'
+      responses:
+        '200':
+          description: GraphQL query executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLResponse'
+components:
+  schemas:
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: The data returned by the query
+          additionalProperties: true
+        errors:
+          type: array
+          description: Any errors that occurred during execution
+          items:
+            $ref: '#/components/schemas/GraphQLError'
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The GraphQL query or mutation to execute
+        variables:
+          type: object
+          description: Variables to pass to the query
+          additionalProperties: true
+        operationName:
+          type: string
+          description: The name of the operation to execute when multiple are defined
+    GraphQLError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              line:
+                type: integer
+              column:
+                type: integer
+        path:
+          type: array
+          items:
+            type: string
+        extensions:
+          type: object
+          additionalProperties: true
+  securitySchemes:
+    StorefrontAccessToken:
+      type: apiKey
+      in: header
+      name: X-Shopify-Storefront-Access-Token
+      description: Public Storefront API access token for the store
