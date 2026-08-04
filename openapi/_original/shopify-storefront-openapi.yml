@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  title: Shopify Storefront API
+  description: >-
+    The Shopify Storefront API is a GraphQL API that enables developers to build
+    custom storefronts, headless commerce experiences, and purchasing flows using
+    Shopify's commerce primitives. It provides access to products, collections,
+    cart, checkout, customer accounts, and contextual pricing. The API is designed
+    for headless commerce architectures using frameworks like Next.js, Nuxt, Remix,
+    or Shopify Hydrogen.
+  version: '2024-10'
+  termsOfService: https://www.shopify.com/legal/api-terms
+  contact:
+    name: Shopify Developer Support
+    url: https://shopify.dev/docs/api/storefront
+  license:
+    name: API Terms of Service
+    url: https://www.shopify.com/legal/api-terms
+servers:
+  - url: https://{store_name}.myshopify.com/api/2024-10/graphql.json
+    description: Shopify Storefront GraphQL API
+    variables:
+      store_name:
+        description: The name of the Shopify store
+        default: mystore
+security:
+  - StorefrontAccessToken: []
+paths:
+  /graphql:
+    post:
+      operationId: executeStorefrontQuery
+      summary: Execute Storefront Query
+      description: >-
+        Execute a GraphQL query or mutation against the Shopify Storefront API.
+        Common operations include querying products, collections, cart management,
+        and checkout. All requests require a valid Storefront API access token
+        passed in the X-Shopify-Storefront-Access-Token header.
+      tags:
+        - GraphQL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLRequest'
+      responses:
+        '200':
+          description: GraphQL query executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLResponse'
+components:
+  securitySchemes:
+    StorefrontAccessToken:
+      type: apiKey
+      in: header
+      name: X-Shopify-Storefront-Access-Token
+      description: Public Storefront API access token for the store
+  schemas:
+    GraphQLRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The GraphQL query or mutation to execute
+        variables:
+          type: object
+          description: Variables to pass to the query
+          additionalProperties: true
+        operationName:
+          type: string
+          description: The name of the operation to execute when multiple are defined
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: The data returned by the query
+          additionalProperties: true
+        errors:
+          type: array
+          description: Any errors that occurred during execution
+          items:
+            $ref: '#/components/schemas/GraphQLError'
+    GraphQLError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              line:
+                type: integer
+              column:
+                type: integer
+        path:
+          type: array
+          items:
+            type: string
+        extensions:
+          type: object
+          additionalProperties: true
+    Product:
+      type: object
+      description: A Shopify product available in the storefront
+      properties:
+        id:
+          type: string
+          description: Global ID of the product (GraphQL GID format)
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description in plain text
+        descriptionHtml:
+          type: string
+          description: Product description in HTML
+        handle:
+          type: string
+          description: URL-friendly product identifier
+        productType:
+          type: string
+          description: Product type category
+        vendor:
+          type: string
+          description: Product vendor name
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags for the product
+        priceRange:
+          $ref: '#/components/schemas/ProductPriceRange'
+        variants:
+          type: object
+          description: Paginated list of product variants
+        images:
+          type: object
+          description: Paginated list of product images
+        seo:
+          $ref: '#/components/schemas/SEO'
+        availableForSale:
+          type: boolean
+          description: Whether the product is available for purchase
+        publishedAt:
+          type: string
+          format: date-time
+          description: Date and time the product was published
+    ProductPriceRange:
+      type: object
+      properties:
+        minVariantPrice:
+          $ref: '#/components/schemas/MoneyV2'
+        maxVariantPrice:
+          $ref: '#/components/schemas/MoneyV2'
+    MoneyV2:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Decimal monetary amount
+        currencyCode:
+          type: string
+          description: Three-letter currency code (ISO 4217)
+    ProductVariant:
+      type: object
+      description: A specific version of a product
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        availableForSale:
+          type: boolean
+        price:
+          $ref: '#/components/schemas/MoneyV2'
+        compareAtPrice:
+          $ref: '#/components/schemas/MoneyV2'
+          nullable: true
+        sku:
+          type: string
+          nullable: true
+        weight:
+          type: number
+        weightUnit:
+          type: string
+          enum: [GRAMS, KILOGRAMS, OUNCES, POUNDS]
+        image:
+          type: object
+        selectedOptions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+    Cart:
+      type: object
+      description: A shopping cart containing items for purchase
+      properties:
+        id:
+          type: string
+          description: Global ID of the cart
+        checkoutUrl:
+          type: string
+          format: uri
+          description: URL to proceed to checkout
+        totalQuantity:
+          type: integer
+          description: Total number of items in the cart
+        cost:
+          type: object
+          properties:
+            totalAmount:
+              $ref: '#/components/schemas/MoneyV2'
+            subtotalAmount:
+              $ref: '#/components/schemas/MoneyV2'
+            totalTaxAmount:
+              $ref: '#/components/schemas/MoneyV2'
+        lines:
+          type: object
+          description: Paginated list of cart line items
+        discountCodes:
+          type: array
+          items:
+            type: object
+    Collection:
+      type: object
+      description: A grouping of products in the storefront
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        handle:
+          type: string
+        image:
+          type: object
+          nullable: true
+        products:
+          type: object
+          description: Paginated list of products in the collection
+        seo:
+          $ref: '#/components/schemas/SEO'
+    Customer:
+      type: object
+      description: A customer account in the storefront
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        acceptsMarketing:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        orders:
+          type: object
+          description: Paginated list of customer orders
+        addresses:
+          type: object
+          description: Paginated list of customer addresses
+        defaultAddress:
+          type: object
+          nullable: true
+    SEO:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true

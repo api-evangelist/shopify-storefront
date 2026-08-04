@@ -1,0 +1,14 @@
+{
+  "provider": "shopify-storefront",
+  "sources": [
+    "shopify-storefront-graphql-api-openapi.yml"
+  ],
+  "outputs": [
+    "shopify-storefront-graphql-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
