@@ -129,6 +129,8 @@ apis:
   - type: GraphQL
     url: graphql/shopify-storefront-graphql.md
 common:
+- type: Website
+  url: https://www.shopify.dev/
 - type: AgenticAccess
   url: agentic-access/shopify-storefront-agentic-access.yml
 - type: DomainSecurity
