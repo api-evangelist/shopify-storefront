@@ -92,16 +92,16 @@ apis:
     url: https://shopify.github.io/js-buy-sdk/
   - type: SDKs
     url: https://github.com/Shopify/js-buy-sdk
-- aid: shopify-storefront:shopify-storefront-graphql-api
-  name: Shopify Storefront API GraphQL API
-  description: The GraphQL API from Shopify Storefront API — 1 operation(s) for graphql.
-  humanURL: https://shopify.dev/docs/api/storefront
+- aid: shopify-storefront:shopify-storefront-graph-ql-api
+  name: Shopify Storefront API Graph QL API
+  description: The Graph QL API from Shopify Storefront API — 1 operation(s) for graph ql.
+  humanURL: https://shopify.dev/docs/storefronts/headless/hydrogen
   baseURL: https://{store_name}.myshopify.com/api/2024-10/graphql.json
   tags:
-  - GraphQL
+  - Graph QL
   properties:
   - type: OpenAPI
-    url: openapi/shopify-storefront-graphql-api-openapi.yml
+    url: openapi/shopify-storefront-graph-ql-api-openapi.yml
   - type: Documentation
     url: https://shopify.dev/docs/api/storefront
   - type: Reference
