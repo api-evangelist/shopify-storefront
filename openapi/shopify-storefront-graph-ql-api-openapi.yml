@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Shopify Storefront GraphQL API
+  title: Shopify Storefront Graph QL API
   description: The Shopify Storefront API is a GraphQL API that enables developers to build custom storefronts, headless commerce experiences, and purchasing flows using Shopify's commerce primitives. It provides access to products, collections, cart, checkout, customer accounts, and contextual pricing. The API is designed for headless commerce architectures using frameworks like Next.js, Nuxt, Remix, or Shopify Hydrogen.
   version: 2024-10
   termsOfService: https://www.shopify.com/legal/api-terms
@@ -20,7 +20,7 @@ servers:
 security:
 - StorefrontAccessToken: []
 tags:
-- name: GraphQL
+- name: Graph QL
 paths:
   /graphql:
     post:
@@ -28,7 +28,7 @@ paths:
       summary: Execute Storefront Query
       description: Execute a GraphQL query or mutation against the Shopify Storefront API. Common operations include querying products, collections, cart management, and checkout. All requests require a valid Storefront API access token passed in the X-Shopify-Storefront-Access-Token header.
       tags:
-      - GraphQL
+      - Graph QL
       requestBody:
         required: true
         content:
@@ -44,6 +44,28 @@ paths:
                 $ref: '#/components/schemas/GraphQLResponse'
 components:
   schemas:
+    GraphQLError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              line:
+                type: integer
+              column:
+                type: integer
+        path:
+          type: array
+          items:
+            type: string
+        extensions:
+          type: object
+          additionalProperties: true
     GraphQLResponse:
       type: object
       properties:
@@ -71,28 +93,6 @@ components:
         operationName:
           type: string
           description: The name of the operation to execute when multiple are defined
-    GraphQLError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error message
-        locations:
-          type: array
-          items:
-            type: object
-            properties:
-              line:
-                type: integer
-              column:
-                type: integer
-        path:
-          type: array
-          items:
-            type: string
-        extensions:
-          type: object
-          additionalProperties: true
   securitySchemes:
     StorefrontAccessToken:
       type: apiKey
