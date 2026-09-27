@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Shopify Storefront Graph QL API
+  title: Shopify Storefront GraphQL API
   description: The Shopify Storefront API is a GraphQL API that enables developers to build custom storefronts, headless commerce experiences, and purchasing flows using Shopify's commerce primitives. It provides access to products, collections, cart, checkout, customer accounts, and contextual pricing. The API is designed for headless commerce architectures using frameworks like Next.js, Nuxt, Remix, or Shopify Hydrogen.
   version: 2024-10
   termsOfService: https://www.shopify.com/legal/api-terms

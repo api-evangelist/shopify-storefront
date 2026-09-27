@@ -98,8 +98,6 @@ apis:
   humanURL: https://shopify.dev/docs/storefronts/headless/hydrogen
   baseURL: https://{store_name}.myshopify.com/api/2024-10/graphql.json
   tags:
-  - GraphQL
-  tags_raw:
   - Graph QL
   properties:
   - type: OpenAPI
