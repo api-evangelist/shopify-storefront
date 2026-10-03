@@ -44,6 +44,33 @@ paths:
                 $ref: '#/components/schemas/GraphQLResponse'
 components:
   schemas:
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The GraphQL query or mutation to execute
+        variables:
+          type: object
+          description: Variables to pass to the query
+          additionalProperties: true
+        operationName:
+          type: string
+          description: The name of the operation to execute when multiple are defined
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: The data returned by the query
+          additionalProperties: true
+        errors:
+          type: array
+          description: Any errors that occurred during execution
+          items:
+            $ref: '#/components/schemas/GraphQLError'
     GraphQLError:
       type: object
       properties:
@@ -66,33 +93,6 @@ components:
         extensions:
           type: object
           additionalProperties: true
-    GraphQLResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: The data returned by the query
-          additionalProperties: true
-        errors:
-          type: array
-          description: Any errors that occurred during execution
-          items:
-            $ref: '#/components/schemas/GraphQLError'
-    GraphQLRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: The GraphQL query or mutation to execute
-        variables:
-          type: object
-          description: Variables to pass to the query
-          additionalProperties: true
-        operationName:
-          type: string
-          description: The name of the operation to execute when multiple are defined
   securitySchemes:
     StorefrontAccessToken:
       type: apiKey
