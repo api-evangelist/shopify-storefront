@@ -44,6 +44,28 @@ paths:
                 $ref: '#/components/schemas/GraphQLResponse'
 components:
   schemas:
+    GraphQLError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The error message
+        locations:
+          type: array
+          items:
+            type: object
+            properties:
+              line:
+                type: integer
+              column:
+                type: integer
+        path:
+          type: array
+          items:
+            type: string
+        extensions:
+          type: object
+          additionalProperties: true
     GraphQLRequest:
       type: object
       required:
@@ -71,28 +93,6 @@ components:
           description: Any errors that occurred during execution
           items:
             $ref: '#/components/schemas/GraphQLError'
-    GraphQLError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The error message
-        locations:
-          type: array
-          items:
-            type: object
-            properties:
-              line:
-                type: integer
-              column:
-                type: integer
-        path:
-          type: array
-          items:
-            type: string
-        extensions:
-          type: object
-          additionalProperties: true
   securitySchemes:
     StorefrontAccessToken:
       type: apiKey
