@@ -44,6 +44,21 @@ paths:
                 $ref: '#/components/schemas/GraphQLResponse'
 components:
   schemas:
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: The GraphQL query or mutation to execute
+        variables:
+          type: object
+          description: Variables to pass to the query
+          additionalProperties: true
+        operationName:
+          type: string
+          description: The name of the operation to execute when multiple are defined
     GraphQLError:
       type: object
       properties:
@@ -66,21 +81,6 @@ components:
         extensions:
           type: object
           additionalProperties: true
-    GraphQLRequest:
-      type: object
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: The GraphQL query or mutation to execute
-        variables:
-          type: object
-          description: Variables to pass to the query
-          additionalProperties: true
-        operationName:
-          type: string
-          description: The name of the operation to execute when multiple are defined
     GraphQLResponse:
       type: object
       properties:
